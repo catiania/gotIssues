@@ -11,6 +11,7 @@ print('The total count of issues is',totalcount)
 links = open('9003samazinglistofcards.html', 'w')
 
 links.write("""
+<!DOCTYPE html>
 <html>
 <head>
 <style>
@@ -18,8 +19,12 @@ td.createcol p {
 	padding-left: 10em;
 }
 
+p{
+	font-family: 'Segoe UI';
+}
 a {
 	text-decoration: none;
+    font-family: 'Segoe UI';
 	color: black;
 }
 
@@ -29,17 +34,27 @@ a:visited {
 
 table {
 	border-collapse: collapse;
-	display: table-cell;
-	max-width: 100%;
-	border: 1px solid darkorange;
+	max-width: 1000%;
+	border: 1px solid grey;
+	margin-left:auto; 
+    margin-right:auto;
 }
 
 tr, td {
-	border-bottom: 1px solid darkorange;
+	border-bottom: 2px solid green;
+}
+tr.end, td.end {
+	border-bottom: 5px solid rgb(216, 216, 32);
+}
+td {
+	font-family: 'Segoe UI';
+	padding: 0.5em;
 }
 
-td p {
-	padding: 0.5em;
+body {
+	text-align:center;
+	padding-top: 50px;
+	margin:0;
 }
 
 tr:hover {
@@ -48,7 +63,8 @@ tr:hover {
 
 </style>
 </head>
-<body>
+<body onkeypress="select()">
+<p>q and e to navigate links, enter or w to open and select next</p>
 <table>
 """)
 
@@ -64,18 +80,40 @@ links.write("""<td><p><a target="_blank" href="https://this-page-intentionally-l
 links.write("""
 </table>
 <script>
-document.querySelectorAll("td").forEach(function(el) {
-	el.addEventListener("click", function() {
-		let myidx = 0;
-		const row = el.parentNode;
-		let child = el;
-		while((child = child.previousElementSibling) != null) {
-			myidx++;
-		}
-		row.nextElementSibling.childNodes[myidx].querySelector("p > a").focus();
-		row.parentNode.removeChild(row);
-	});
-});
+const body = document.querySelector('body');
+
+var count = 0;
+document.querySelectorAll('a')[count].style.color = "red";
+function select(e){
+	if(e==undefined){
+		return;
+	}
+    document.querySelectorAll('a')[count].style.color = "black";
+	if (window.event) keycode = window.event.keyCode; 	// IE
+	else if (e) keycode = e.which;
+	if (keycode == 13 || keycode == 87) { 
+		
+		document.querySelectorAll('a')[count].click()
+		count+=1;
+	}
+	else if (keycode == 81){
+		count-=1;
+	}
+	else if (keycode == 69){
+		count+=1;
+	}
+	if(count<0){
+		count = 0;
+	}else if(count>=document.querySelectorAll('a').length){
+		count = document.querySelectorAll('a').length-1;	
+	}
+	document.querySelectorAll('a')[count].style.color = "red";
+	if(count>1)
+	document.querySelectorAll('a')[count-1].scrollIntoView();
+	
+}
+body.onkeydown=select;
+</script>
 </script>
 </body>
 """)
